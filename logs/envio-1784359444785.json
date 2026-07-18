@@ -1,0 +1,18 @@
+{
+    "fechaInicio": "2026-07-18T02:23:50.583 PET",
+    "fechaFin": "2026-07-18T02:24:04.785 PET",
+    "totalExcel": 1,
+    "totalConfirmados": 1,
+    "enviados": 1,
+    "errores": 0,
+    "resultados": [
+        {
+            "documento": "71460106",
+            "nombre": "PACHAS SARAVIA JESUS RAUL",
+            "ok": true,
+            "respuesta": {
+                "ok": true
+            }
+        }
+    ]
+}
