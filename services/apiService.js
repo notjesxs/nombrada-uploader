@@ -9,40 +9,56 @@ function sleep(ms) {
 
 async function sendWorker(data, token) {
 
+    try {
+        const response = await axios.post(
 
-    const response = await axios.post(
+            `https://201.234.53.148:7555//api/v1/upload/jph`,
 
-        `https://201.234.53.148:7555//api/v1/upload/jph`,
+            data,
 
-        data,
+            {
 
-        {
+                headers: {
 
-            headers: {
+                    Authorization:
+                        `Bearer ${token}`,
 
-                Authorization:
-                    `Bearer ${token}`,
+                    "Content-Type":
+                        "application/json"
 
-                "Content-Type":
-                    "application/json"
+                },
 
-            },
+                httpsAgent:
+                    new https.Agent({
+                        rejectUnauthorized: false
+                    })
 
-            httpsAgent:
-                new https.Agent({
-                    rejectUnauthorized: false
-                })
+            }
 
+        );
+
+        // Esperar 5 segundos después del envío
+        await sleep(5000);
+
+        const payload = response.data;
+
+        if (payload && typeof payload === "object" && payload.ok === false) {
+            throw new Error(payload.error || payload.message || "La API devolvió un error");
         }
 
-    );
+        return {
+            ok: true,
+            data: payload
+        };
+    } catch (error) {
+        const upstreamMessage = error.response?.data
+            ? (typeof error.response.data === "string"
+                ? error.response.data
+                : JSON.stringify(error.response.data))
+            : error.message;
 
-
-    // Esperar 5 segundos después del envío
-    await sleep(5000);
-
-
-    return response.data;
+        throw new Error(`Error del servicio upstream: ${upstreamMessage}`);
+    }
 
 }
 

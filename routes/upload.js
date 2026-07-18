@@ -131,7 +131,7 @@ router.post("/", upload.single("excel"), async (req, res) => {
                         response.ok,
 
                     respuesta:
-                        response
+                        response.data ?? response
 
                 });
 

@@ -7,6 +7,20 @@ const btnLogs = document.getElementById("btnLogs");
 const listaLogs = document.getElementById("listaLogs");
 const logContent = document.getElementById("logContent");
 
+async function readJsonResponse(response, fallbackMessage = "No se pudo procesar la respuesta") {
+    const text = await response.text();
+
+    if (!text) {
+        return { ok: false, error: fallbackMessage };
+    }
+
+    try {
+        return JSON.parse(text);
+    } catch (error) {
+        return { ok: false, error: text || fallbackMessage };
+    }
+}
+
 function renderLogList(logs) {
     listaLogs.innerHTML = "";
 
@@ -30,10 +44,10 @@ function renderLogList(logs) {
 
             try {
                 const response = await fetch(`/api/logs/${log.name}`);
-                const data = await response.json();
+                const data = await readJsonResponse(response, "No se pudo cargar el log");
 
-                if (!data.ok) {
-                    throw new Error(data.message || "No se pudo cargar el log");
+                if (!response.ok || !data.ok) {
+                    throw new Error(data.error || data.message || `Error ${response.status}`);
                 }
 
                 logContent.textContent = JSON.stringify(data.log, null, 2);
@@ -49,10 +63,10 @@ function renderLogList(logs) {
 btnLogs.onclick = async () => {
     try {
         const response = await fetch("/api/logs");
-        const data = await response.json();
+        const data = await readJsonResponse(response, "No se pudieron cargar los logs");
 
-        if (!data.ok) {
-            throw new Error(data.error || "No se pudieron cargar los logs");
+        if (!response.ok || !data.ok) {
+            throw new Error(data.error || data.message || `Error ${response.status}`);
         }
 
         renderLogList(data.logs);
@@ -112,7 +126,11 @@ btn.onclick = async () => {
 
 
         const data =
-            await response.json();
+            await readJsonResponse(response, "No se pudo procesar la respuesta del servidor");
+
+        if (!response.ok || !data.ok) {
+            throw new Error(data.error || data.message || `Error ${response.status}`);
+        }
 
 
 

@@ -66,6 +66,36 @@ function generarHorario(turno, fecha) {
             };
 
 
+        case "M":
+
+            return {
+                horario: "M",
+
+                fechaInicioUTC:
+                    fechaBase.format("YYYY-MM-DD")
+                    + "T06:00:00Z",
+
+                fechaFinUTC:
+                    fechaBase.format("YYYY-MM-DD")
+                    + "T16:30:00Z"
+            };
+
+
+        case "MM":
+
+            return {
+                horario: "MM",
+
+                fechaInicioUTC:
+                    fechaBase.format("YYYY-MM-DD")
+                    + "T06:00:00Z",
+
+                fechaFinUTC:
+                    fechaBase.format("YYYY-MM-DD")
+                    + "T20:30:00Z"
+            };
+
+
         default:
 
             throw new Error(
