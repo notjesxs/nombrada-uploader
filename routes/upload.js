@@ -177,10 +177,10 @@ router.post("/", upload.single("excel"), async (req, res) => {
             if (contador < confirmed.length) {
 
                 console.log(
-                    "Esperando 5 segundos..."
+                    "Esperando 1 segundo..."
                 );
 
-                await sleep(5000);
+                await sleep(1000);
 
             }
 

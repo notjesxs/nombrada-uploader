@@ -37,8 +37,8 @@ async function sendWorker(data, token) {
 
         );
 
-        // Esperar 5 segundos después del envío
-        await sleep(5000);
+        // Esperar 1 segundo después del envío
+        await sleep(1000);
 
         const payload = response.data;
 
