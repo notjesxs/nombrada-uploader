@@ -19,6 +19,11 @@ app.use(
     require("./routes/upload")
 );
 
+app.use(
+    "/api/logs",
+    require("./routes/logs")
+);
+
 
 
 app.listen(

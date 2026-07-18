@@ -1,12 +1,65 @@
 const btn = document.getElementById("btnEnviar");
-
 const excel = document.getElementById("excel");
-
 const estado = document.getElementById("estado");
-
 const tabla = document.getElementById("tabla");
-
 const barra = document.getElementById("barra");
+const btnLogs = document.getElementById("btnLogs");
+const listaLogs = document.getElementById("listaLogs");
+const logContent = document.getElementById("logContent");
+
+function renderLogList(logs) {
+    listaLogs.innerHTML = "";
+
+    if (!logs.length) {
+        listaLogs.innerHTML = "<p>No hay logs aún.</p>";
+        return;
+    }
+
+    logs.forEach(log => {
+        const item = document.createElement("div");
+        item.className = "log-item";
+        item.innerHTML = `
+            <strong>${log.name}</strong><br>
+            <small>${new Date(log.modifiedAt).toLocaleString("es-PE")}</small>
+        `;
+
+        item.onclick = async () => {
+            document.querySelectorAll(".log-item").forEach(el => el.classList.remove("active"));
+            item.classList.add("active");
+            logContent.textContent = "Cargando...";
+
+            try {
+                const response = await fetch(`/api/logs/${log.name}`);
+                const data = await response.json();
+
+                if (!data.ok) {
+                    throw new Error(data.message || "No se pudo cargar el log");
+                }
+
+                logContent.textContent = JSON.stringify(data.log, null, 2);
+            } catch (error) {
+                logContent.textContent = `Error: ${error.message}`;
+            }
+        };
+
+        listaLogs.appendChild(item);
+    });
+}
+
+btnLogs.onclick = async () => {
+    try {
+        const response = await fetch("/api/logs");
+        const data = await response.json();
+
+        if (!data.ok) {
+            throw new Error(data.error || "No se pudieron cargar los logs");
+        }
+
+        renderLogList(data.logs);
+    } catch (error) {
+        listaLogs.innerHTML = `<p>Error: ${error.message}</p>`;
+    }
+};
 
 
 
